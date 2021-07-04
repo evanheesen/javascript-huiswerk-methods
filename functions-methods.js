@@ -9,7 +9,13 @@
 // getEmailDomain("t.mellink@novi.nl") geeft novi.nl
 // getEmailDomain("a.wiersma@outlook.com") geeft outlook.com
 
+function getEmailDomain(email) {
+    const splitEmail = email.split("@");
+    return splitEmail[1]
+}
 
+const domain = getEmailDomain("t.mellink@novi.nl");
+console.log(domain);
 
 
 /* Opdracht  2 */
@@ -20,7 +26,20 @@
 // typeOfEmail("novi.nlaapjesk@outlook.com") geeft geeft "Extern" <-- deze moet het ook doen!
 // typeOfEmail("a.wiersma@outlook.com") geeft "Extern"
 
+function typeOfEmail(email) {
+    const splitEmail = email.split("@");
+    const domainEmail = splitEmail[1];
+    if (domainEmail === "novi.nl") {
+        return "Medewerker";
+    } else if (domainEmail === "novi-education.nl") {
+        return "Student";
+    } else {
+        return "Extern";
+    }
+}
 
+const domainName = typeOfEmail("n.eeken@novi-education.nl");
+console.log(domainName);
 
 /* Opdracht  3 */
 // Schrijf een functie genaamd checkEmailValidity, die een emailadres verwacht en checkt of het emailadres valide is. De functie returned true of false, afhankelijk van de uitkomst.
@@ -34,3 +53,18 @@
 // checkEmailValidity("n.eekenanovi.nl") geeft false - want geen @
 // checkEmailValidity("n.eeken@novinl.") geeft false - want de punt mag niet als laatst
 // checkEmailValidity("tessmellink@novi,nl") geeft false - want er staat een komma in
+
+function checkEmailValidity(email) {
+    const checkAt = email.includes("@");
+    const checkComma = email.includes(",");
+    const checkIndexLastDot = email.lastIndexOf(".");
+    const lengthEmail = email.length - 1;
+    if (checkAt === true && checkComma === false && checkIndexLastDot != lengthEmail) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+const emailCheck = checkEmailValidity("n.eeken@novinl.");
+console.log(emailCheck);
