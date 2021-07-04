@@ -18,14 +18,16 @@ const grades = [9, 8, 5, 7, 7, 4, 9, 8, 8, 3, 6, 8, 5, 6];
 
 //1. Check of cijfer >= 8
 
-for (let i = 0; i < grades.length; i++) {
-    if (grades[i] < 8) { //als cijfer in lijst is lager dan 8
-        grades.splice(i, 1); //dan verwijder i (1 item) en voeg 0 items toe.
+const gradesCumLaude = grades.slice(); //creëer een referentieloze lijst op basis van de grades lijst
+
+for (let i = 0; i < gradesCumLaude.length; i++) {
+    if (gradesCumLaude[i] < 8) { //als cijfer in lijst is lager dan 8
+        gradesCumLaude.splice(i, 1); //dan verwijder i (1 item) en voeg 0 items toe.
         i--; //verlaag i met 1, omdat de lijst met 1 is afgenomen
     }
 }
 
-console.log(grades.length);
+console.log("De uitkomst van opdracht 1a is: " + gradesCumLaude.length + " (aantal Cum laude afgestudeerden uit grades array)");
 
 /*  1b: Omschrijven tot een herbruikbare functie   */
 // Schrijf een functie genaamd cumLaude, die een array van cijfers verwacht (zoals grades) en het aantal Cum laude studenten teruggeeft. Gebruik hiervoor jouw antwoord van 1a.
@@ -37,20 +39,18 @@ console.log(grades.length);
 // cumLaude([6, 4, 5]) geeft 0
 // cumLaude([8, 9, 4, 6, 10]) geeft 3
 
-
-function cumLaude(grades) {
-    for (let i = 0; i < grades.length; i++) {
-        if (grades[i] < 8) { //als cijfer in lijst is lager dan 8
-            grades.splice(i, 1); //dan verwijder i (1 item) en voeg 0 items toe.
+function cumLaude(gradesInput) {
+    for (let i = 0; i < gradesInput.length; i++) {
+        if (gradesInput[i] < 8) { //als cijfer in lijst is lager dan 8
+            gradesInput.splice(i, 1); //dan verwijder i (1 item) en voeg 0 items toe.
             i--; //verlaag i met 1, omdat de lijst met 1 is afgenomen
         }
     }
-    return grades.length;
+    return gradesInput.length;
 }
 
-amountCumLaude = cumLaude(grades);
-
-console.log(amountCumLaude);
+amountCumLaude = cumLaude([8, 9, 4, 6, 10]);
+console.log("De uitkomst van opdracht 1b is: " + amountCumLaude + " (aantal Cum laude afgestudeerden uit ingevoerde array)");
 
 
 /* Opdracht  2: Gemiddeld cijfer */
@@ -65,27 +65,23 @@ console.log(amountCumLaude);
 
 // ---- Verwachte uitkomst: 6.642857142857143
 
-//1. bereken aantal cijfers
-const amountGrades = grades.length;
 
-//2. bereken het totaal van alle cijfers
-//2.1 maak een for loop waarbij elk cijfer bij het vorige wordt opgeteld
+const gradesTemp = grades.slice(); //Creëer een referentieloze lijst op basis van de grades lijst
 
+let amountGrades = 0;
 
-//i waarde geven
-// i waarde optellen bij 0
-function calculateTotal() {
-
-    const gradesTemp = grades.slice();
-    for (let i = 0; i < amountGrades; i++) {
-        gradesTemp.shift();
-        const firstGradeTemp = gradesTemp[0] + i;
+//maak een for loop waarbij elk cijfer bij het vorige wordt opgeteld, om zo het totaal uit de lijst te krijgen
+function calculateAverage() {
+    amountGrades = gradesTemp.length; //Bereken aantal cijfers in cijfers
+    for (let i = 1; i < amountGrades; i++) {
+        gradesTemp[0] = gradesTemp[0] + gradesTemp[i]; // i waarde optellen bij item 0 uit lijst
     }
-    return totalAmount;
+    const totalGrades = gradesTemp[0]; //geeft totaal item 0 uit lijst
+    const averageGrade = totalGrades / amountGrades; //deel het totaal van alle cijfers door het aantal cijfers in de lijst
+    return averageGrade;
 }
 
-
-//3. deel het totaal van alle cijfers door het aantal cijfers
+console.log("De uitkomst van opdracht 2a is: " + calculateAverage() + " (gemiddelde van grades array)"); //deel het totaal van alle cijfers door het aantal cijfers in de lijst
 
 
 /* 2b: Omschrijven tot een herbruikbare functie */
@@ -99,10 +95,27 @@ function calculateTotal() {
 // averageGrade([8, 9, 4, 6, 10]) geeft xxxx
 
 
+function averageGrade(gradesInput) {
+    const gradesInputTemp = gradesInput.slice();
+    amountGrades = gradesInputTemp.length;
+    for (let i = 1; i < amountGrades; i++) {
+        gradesInputTemp[0] = gradesInputTemp[0] + gradesInputTemp[i]; // i waarde optellen bij 0
+    }
+    const totalGrades = gradesInputTemp[0]; //geeft totaal item 0 uit lijst
+    const averageGrade = totalGrades / amountGrades; //deel het totaal van alle cijfers door het aantal cijfers in de lijst
+    return averageGrade;
+}
+
+const averageGrades = averageGrade([8, 9, 4, 6, 10]);
+console.log("De uitkomst van opdracht 2b is: " + averageGrades + " (gemiddelde van ingegeven lijst)");
+
+
 /* 2c: Afronden op twee decimalen */
 // Zorg ervoor dat het gemiddelde cijfer dat wordt teruggegeven uit de functie netjes wordt afgerond op twee decimalen.
 // Tip: Google is your best friend!
 
+const roundedAverageGrade = averageGrades.toFixed(2);
+console.log("De uitkomst van opdracht 2c is: " + roundedAverageGrade + " (afgerond gemiddelde van ingegeven lijst)");
 
 /* Bonusopdracht: hoogste cijfer */
 
@@ -115,6 +128,19 @@ function calculateTotal() {
 
 // ---- Verwachte uitkomst: 9
 
+//Stap 1: Maak nieuwe lijst waarin hoogste getal wordt opgeslagen
+const highestGradeList = [0];
+//Stap 2: Maak een for loop om ieder getal in de lijst door te lopen
+for (let i = 0; i < grades.length; i++) {
+    if (grades[i] > highestGradeList[0]) { //als huidige getal hoger is dan getal in highestGradeList
+        highestGradeList.splice(0, 1, grades[i]); //vervang het getal in highestGradeList door huidige getal
+    }
+}
+//Stap 3: Maak een variabele voor het hoogste getal
+const highestGradeInList = highestGradeList[0];
+//Stap 4: Loggen hoogste getal
+console.log("De uitkomst van opdracht 3a is: " + highestGradeInList + " (hoogste getal uit grades array");
+
 
 /* 3b: Omschrijven tot een herbruikbare functie */
 // Schrijf een functie genaamd highestGrade, die een array van cijfers verwacht (zoals grades) en het hoogste cijfer teruggeeft. Gebruik hiervoor jouw antwoord van 3a.
@@ -125,3 +151,20 @@ function calculateTotal() {
 // highestGrade(grades) geeft 9
 // highestGrade([6, 4, 5]) geeft 6
 // highestGrade([8, 9, 4, 6, 10]) geeft 10
+
+let highestGradeInList2 = 0;
+
+function highestGrade(gradesInput) {
+    const highestGradeArray = [0];
+    for (let i = 0; i < gradesInput.length; i++) {
+        if (gradesInput[i] > highestGradeArray[0]) { //als huidige getal hoger is dan getal in highestGradeList
+            highestGradeArray.splice(0, 1, gradesInput[i]); //vervang het getal in highestGradeList door huidige getal
+        }
+    }
+    highestGradeInList2 = highestGradeArray[0];
+    return highestGradeInList2;
+}
+
+highestGradeInList2 = highestGrade([8, 9, 4, 6, 10]);
+
+console.log("De uitkomst van opdracht 3b is: " +highestGradeInList2 +" (hoogste getal uit ingegeven lijst)");
